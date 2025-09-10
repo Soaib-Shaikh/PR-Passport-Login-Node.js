@@ -86,10 +86,10 @@ bash npm install
 
 3. Set up environment variables in a `.env` file:
 
-env DB_URL=mongodb+srv://soaibshaikh:12345@blog-project.e6ptai6.mongodb.net/blog_project SESSION_SECRET=soaib1002 
-CLOUDINARY_CLOUD_NAME=dav5tpyet 
-CLOUDINARY_KEY=213397776336737 
-CLOUDINARY_SECRET=vly7gGGczXqMYiEXMa2GLQnvFJ0
+- env DB_URL=mongodb+srv://soaibshaikh:12345@blog-project.e6ptai6.mongodb.net/blog_project - SESSION_SECRET=soaib1002 
+- CLOUDINARY_CLOUD_NAME=dav5tpyet 
+- CLOUDINARY_KEY=213397776336737 
+- CLOUDINARY_SECRET=vly7gGGczXqMYiEXMa2GLQnvFJ0
 
 4. Run the application:
 bash npm start
