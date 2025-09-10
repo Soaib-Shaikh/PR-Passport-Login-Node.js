@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/profile.css">
+
+  <style>
+    body {
+      background: #f5f7fb;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #ffffff !important;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      padding: 12px 20px;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #4b00ff !important;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      margin-right: 15px;
+      color: #333 !important;
+    }
+
+    .nav-link:hover {
+      color: #4b00ff !important;
+    }
+
+    .container-main {
+      max-width: 1100px;
+      margin: 50px auto;
+      padding: 0 15px;
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .card-left {
+      flex: 0 1 360px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .card-right {
+      flex: 1 1 640px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .avatar-wrap {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0f0ff, #fff);
+      cursor: pointer;
+      border: 6px solid #fff;
+      box-shadow: 0 8px 30px rgba(75, 0, 255, 0.12);
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-letter {
+      font-size: 64px;
+      font-weight: 700;
+      color: #4b00ff;
+    }
+
+    .username {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+      color: #222;
+    }
+
+    .email {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .small-info {
+      color: #999;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      justify-content: center;
+    }
+
+    .btn-edit {
+      background: linear-gradient(90deg, #3128ca, #7a3fff);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 18px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-delete {
+      background: #ff4757;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 18px;
+      font-weight: 700;
+    }
+
+    .right-title {
+      font-weight: 800;
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+      color: #222;
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .detail-label {
+      width: 160px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      background: #f7f8fb;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #e8ebf0;
+      flex: 1;
+    }
+
+    .btn-change-pass {
+      margin-top: 25px;
+      display: inline-block;
+      background: #ff8c00;
+      color: #fff;
+      padding: 10px 20px;
+      font-weight: 700;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .btn-change-pass:hover {
+      background: #e07b00;
+      color: #fff;
+    }
+
+    @media (max-width:900px) {
+      .container-main {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card-left,
+      .card-right {
+        width: 100%;
+      }
+
+      .detail-label {
+        width: 140px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('../../partials/header') %>
+
+    <main class="container my-4">
+      <div class="container-main">
+        <!-- LEFT CARD -->
+        <div class="card-left">
+          <form id="avatarForm" action="/profile/avatar" method="POST" enctype="multipart/form-data"
+            style="display:block;">
+            <input id="avatarInput" type="file" name="avatar" accept="image/*" style="display:none">
+            <label for="avatarInput" class="avatar-wrap" title="Click to change avatar">
+              <% if (user.avatarLocal) { %>
+                <img src="/uploads/<%= user.avatarLocal %>" alt="avatar" class="avatar-img">
+                <% } else { %>
+                  <div class="avatar-letter">
+                    <%= (user.username && user.username[0]) ? user.username[0].toUpperCase() : 'U' %>
+                  </div>
+                  <% } %>
+            </label>
+          </form>
+
+          <div class="username">
+            <%= user.username %>
+          </div>
+          <div class="email">
+            <%= user.email %>
+          </div>
+
+          <div class="small-info">
+            Joined: <strong>
+              <%= new Date(user.createdAt).toLocaleDateString() %>
+            </strong>
+          </div>
+
+          <div class="action-group">
+            <a href="/profile/edit" class="btn-edit">✏️ Edit</a>
+            <form action="/profile/delete" method="POST" style="display:inline;">
+              <button class="btn-delete" type="submit">🗑️ Delete</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT CARD -->
+        <!-- RIGHT CARD -->
+        <div class="card-right">
+          <div class="right-title">Personal Details</div>
+
+          <div class="detail-row">
+            <div class="detail-label">Full Name</div>
+            <div class="detail-value">
+              <%= user.fullName || 'N/A' %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Mobile</div>
+            <div class="detail-value">
+              <%= user.mobile || 'N/A' %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Address</div>
+            <div class="detail-value">
+              <%= user.address || 'N/A' %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Date of Birth</div>
+            <div class="detail-value">
+              <%= user.birthdate ? new Date(user.birthdate).toLocaleDateString('en-GB') : 'N/A' %>
+            </div>
+          </div>
+
+
+          <div class="detail-row">
+            <div class="detail-label">Gender</div>
+            <div class="detail-value">
+              <%= user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : 'N/A' %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Email</div>
+            <div class="detail-value">
+              <%= user.email %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Member Since</div>
+            <div class="detail-value">
+              <%= new Date(user.createdAt).toLocaleString() %>
+            </div>
+          </div>
+
+          <!-- ✅ Change password button -->
+          <a href="/changePass" class="btn-change-pass">🔑 Change Password</a>
+        </div>
+
+      </div>
+
+      <!-- minimal JS: auto-submit avatar form when file selected -->
+      <script>
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarForm = document.getElementById('avatarForm');
+        avatarInput && avatarInput.addEventListener('change', function () {
+          if (this.files && this.files.length) avatarForm.submit();
+        });
+      </script>
+    </main>
+
+    <%- include('../../partials/footer') %>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<header class="bg-white shadow-sm sticky-top" style="border-bottom: 1px solid #eee;">
+  <div class="container py-3 text-center">
+
+    <!-- Blog Title -->
+    <a href="/blog" class="navbar-brand fw-bold fs-1 text-primary text-decoration-none d-block mb-2">
+      BLOG
+    </a>
+
+    <!-- Nav + Search + User Actions in one line -->
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+
+      <!-- Navigation Links -->
+      <nav class="nav">
+        <a class="nav-link text-dark fw-semibold" href="/blog">Home</a>
+        <% if(user) { %>
+          <a class="nav-link text-dark fw-semibold" href="/write">Write</a>
+          <a class="nav-link text-dark fw-semibold" href="/profile">My Profile</a>
+        <% } %>
+      </nav>
+
+      <!-- Search Bar -->
+      <form action="/posts/search" method="get" class="d-flex" style="max-width: 250px;">
+        <input type="text" name="q" class="form-control form-control-sm" placeholder="Search..." />
+        <button class="btn btn-dark btn-sm ms-2" type="submit">🔍</button>
+      </form>
+
+      <!-- User Actions -->
+      <% if(user) { %>
+        <span class="fw-bold text-dark"> Hi, <%= user.username %></span>
+        <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-outline-dark btn-sm">Login</a>
+        <a href="/signup" class="btn btn-dark btn-sm">Sign Up</a>
+      <% } %>
+
+    </div>
+  </div>
+</header>

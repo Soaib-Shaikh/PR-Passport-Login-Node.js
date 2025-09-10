@@ -1,0 +1,40 @@
+{
+  "name": "bookmyshow-clone",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A full-stack Node.js + Express + MongoDB clone of BookMyShow, featuring movie listings, authentication (login/signup), session management, and a modern UI with EJS and Bootstrap.",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cloudinary": "^1.41.3",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemon": "^3.1.10",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daxrokz10/Blog-Website-Node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Daxrokz10/Blog-Website-Node/issues"
+  },
+  "homepage": "https://github.com/Daxrokz10/Blog-Website-Node#readme"
+}

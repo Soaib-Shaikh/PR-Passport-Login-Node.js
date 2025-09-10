@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: white;
+    color: black;
+}
+
+/* TABS */
+
+.content-tab{
+    width: 100%;
+}
+
+.tabs {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.tab-box {
+    background: #d1d1d1;
+    border-radius: 10px;
+    padding: 10px 32px;
+    text-align: center;
+    transition: background 0.2s;
+    min-width: 120px;
+    font-weight: 500;
+    font-size: 1.1em;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.tab-box a {
+    color: #222;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tab-box:hover, .tab-box.active {
+    background: #999898;
+}
+
+/* Overlay for card image text */
+.card-img-overlay.custom-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.1) 100%);
+    border-radius: 0 0 1rem 1rem;
+}
+.card-title, .card-img-overlay p {
+    color: #fff !important;
+}
