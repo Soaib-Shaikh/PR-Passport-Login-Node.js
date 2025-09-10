@@ -117,15 +117,12 @@ bash npm start
 
 ## 👨‍💻 Usage
 
-Register and log in using your credentials.
+- Register and log in using your credentials.
+- Create, edit, and delete blog posts with images. 
+- Search blogs by keywords or titles.
+- Like and comment on posts.
+- Manage your profile, update details, and change password securely.
 
-Create, edit, and delete blog posts with images.
-
-Search blogs by keywords or titles.
-
-Like and comment on posts.
-
-Manage your profile, update details, and change password securely.
 ---
 
 ## License
