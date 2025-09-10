@@ -115,12 +115,17 @@ bash npm start
 - Other Tools: dotenv, morgan, flash messages
 ---
 
-## Usage
+## 👨‍💻 Usage
 
-- Register or login to create, edit, and delete your blog posts.
-- Upload images with posts that will be saved locally and on Cloudinary.
-- View all posts, like them, and add comments.
+Register and log in using your credentials.
 
+Create, edit, and delete blog posts with images.
+
+Search blogs by keywords or titles.
+
+Like and comment on posts.
+
+Manage your profile, update details, and change password securely.
 ---
 
 ## License
