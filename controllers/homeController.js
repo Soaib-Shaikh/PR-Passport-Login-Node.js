@@ -24,7 +24,7 @@ module.exports.homePageReader = async (req, res) => {
         if (!req.isAuthenticated()) return res.redirect('/login');
 
         // All posts (latest first)
-        const posts = await Post.find() 
+        const posts = await Post.find()
             .populate('author', 'username avatarLocal bio')
             .populate('comments.author', 'username')
             .sort({ createdAt: -1 })
@@ -65,8 +65,9 @@ module.exports.homePageReader = async (req, res) => {
             featuredPosts,
             popularPosts,
             recentComments,
-            featuredAuthor
+            featuredAuthor,
         });
+
 
     } catch (err) {
         console.error("⚠️ Blog load error:", err);
@@ -100,7 +101,7 @@ module.exports.homePageWriter = async (req, res) => {
 module.exports.login = (req, res) => {
     return isApiRequest(req)
         ? res.json({ success: true, message: "Login page" })
-        : res.render('./pages/auth/login');
+        : res.render('./pages/auth/login')
 };
 
 // Handle login
@@ -110,34 +111,33 @@ module.exports.loginHandle = async (req, res, next) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            console.log("User not found");
-
+            if (!isApiRequest(req)) req.flash("error_msg", "User not found");
             return isApiRequest(req)
                 ? res.json({ success: false, message: "User not found" })
-                : res.redirect('/login?error=notfound');
+                : res.redirect('/login');
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            console.log("Invalid password");
-
+            if (!isApiRequest(req)) req.flash("error_msg", "Invalid password");
             return isApiRequest(req)
                 ? res.json({ success: false, message: "Invalid password" })
-                : res.redirect('/login?error=invalid');
+                : res.redirect('/login');
         }
 
         passport.authenticate("local", (err, user, info) => {
             if (err) return next(err);
             if (!user) {
+                if (!isApiRequest(req)) req.flash("error_msg", "Authentication failed");
                 return isApiRequest(req)
                     ? res.json({ success: false, message: "Authentication failed" })
-                    : res.redirect('/login?error=authfailed');
+                    : res.redirect('/login');
             }
 
             req.logIn(user, (err) => {
                 if (err) return next(err);
-                console.log('Login Successful.');
 
+                if (!isApiRequest(req)) req.flash("success_msg", "Login successful");
                 return isApiRequest(req)
                     ? res.json({ success: true, message: "Login successful", user })
                     : res.redirect("/blog");
@@ -145,11 +145,13 @@ module.exports.loginHandle = async (req, res, next) => {
         })(req, res, next);
 
     } catch (error) {
+        if (!isApiRequest(req)) req.flash("error_msg", "Login failed");
         return isApiRequest(req)
             ? res.json({ success: false, message: "Login failed" })
             : res.redirect('/login');
     }
 };
+
 
 // Signup page
 module.exports.signup = (req, res) => {
@@ -165,41 +167,44 @@ module.exports.signupHandle = async (req, res) => {
     try {
         const existing = await User.findOne({ $or: [{ username }, { email }] });
         if (existing) {
-            console.log("User already exists.");
+            if (!isApiRequest(req)) req.flash("error_msg", "User already exists");
             return isApiRequest(req)
                 ? res.json({ success: false, message: "User already exists" })
-                : res.redirect('/signup?error=exists');
+                : res.redirect('/signup');
         }
 
         const hashed = await bcrypt.hash(password, 10);
         const newUser = await User.create({ username, email, password: hashed, role });
 
-        console.log("User Created.");
+        if (!isApiRequest(req)) req.flash("success_msg", "Signup successful. Please login.");
         return isApiRequest(req)
-            ? res.json({ success: true, message: "User Created.", user: newUser })
+            ? res.json({ success: true, message: "User created", user: newUser })
             : res.redirect('/login');
     } catch (error) {
+        if (!isApiRequest(req)) req.flash("error_msg", "Signup failed");
         return isApiRequest(req)
             ? res.json({ success: false, message: "Signup failed" })
             : res.redirect('/signup');
     }
 };
 
+
 // Logout
 module.exports.logout = (req, res, next) => {
     req.logout((err) => {
-        if (err) return next(err);
+        if (err) {
+            if (!isApiRequest(req)) req.flash("error_msg", "Logout failed");
+            return next(err);
+        }
 
-        req.session.destroy((err) => {
-            if (err) return next(err);
-            console.log("User logged out.");
+        if (!isApiRequest(req)) req.flash("success_msg", "Logged out successfully");
 
-            return isApiRequest(req)
-                ? res.json({ success: true, message: "Logout successful" })
-                : res.redirect("/login");
-        });
+        return isApiRequest(req)
+            ? res.json({ success: true, message: "Logout successful" })
+            : res.redirect("/login");
     });
 };
+
 
 module.exports.changePassPage = (req, res) => {
     return res.render('./pages/auth/changePass', { user: req.user });
@@ -208,29 +213,42 @@ module.exports.changePassPage = (req, res) => {
 
 module.exports.changePassword = async (req, res) => {
     try {
-        let { id } = req.params;
-        let { oldPassword, newPassword, confirmPassword } = req.body;
+        const { id } = req.params;
+        const { oldPassword, newPassword, confirmPassword } = req.body;
 
-        let user = await User.findById(id);
+        //  Find user
+        const user = await User.findById(id);
+        if (!user) {
+            req.flash("error_msg", "User not found");
+            return res.redirect('/changePass');
+        }
 
-        let isMatch = await bcrypt.compare(oldPassword, user.password);
+        //  Compare old password
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+
         if (!isMatch) {
-            console.log("Old Password is incorrect");
+            req.flash("error_msg", "Old password is incorrect");
             return res.redirect('/changePass');
         }
 
+        //  Check new vs confirm
         if (newPassword !== confirmPassword) {
-            console.log("New Password and Confirm Password do not match");
+            req.flash("error_msg", "New password and confirm password do not match");
             return res.redirect('/changePass');
         }
 
+        //  Hash new password + save
         user.password = await bcrypt.hash(newPassword, 10);
         await user.save();
 
-        console.log("Password changed successfully");
-        return res.redirect('/logout');
+        //  Success flash + redirect
+        req.flash("success_msg", "Password changed successfully");
+        return res.redirect('/login');
+
     } catch (error) {
-        console.log(error.message);
+        console.log("Change password error:", error.message);
+        req.flash("error_msg", "Password change failed");
         return res.redirect('/changePass');
     }
-}
+};
+

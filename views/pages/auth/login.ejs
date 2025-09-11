@@ -11,11 +11,11 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -25,7 +25,6 @@
       justify-content: center;
       background: #f8f9fa;
     }
-
     .login-card {
       background: #fff;
       border-radius: 20px;
@@ -35,121 +34,97 @@
       box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
       animation: fadeIn 0.7s ease-in-out;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-15px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     .login-title {
       font-size: 26px;
       font-weight: 700;
       text-align: center;
-      margin-bottom: 28px;
-      color: #198754; /* Green */
-    }
-
-    .input-group {
-      position: relative;
       margin-bottom: 20px;
-      width: 100%;
-    }
-
-    .input-group input {
-      width: 100%;
-      display: block;
-      padding: 14px 42px 14px 14px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      background: #fafafa;
-      font-size: 15px;
-      transition: all 0.2s ease;
-    }
-
-    .input-group input:focus {
-      border-color: #198754;
-      box-shadow: 0 0 0 3px rgba(25,135,84,0.15);
-      outline: none;
-      background: #fff;
-    }
-
-    .input-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
       color: #198754;
-      font-size: 18px;
-      pointer-events: none;
     }
-
+    .input-group { position: relative; margin-bottom: 20px; width: 100%; }
+    .input-group input {
+      width: 100%; display: block; padding: 14px 42px 14px 14px;
+      border: 1px solid #ddd; border-radius: 12px; background: #fafafa;
+      font-size: 15px; transition: all 0.2s ease;
+    }
+    .input-group input:focus {
+      border-color: #198754; box-shadow: 0 0 0 3px rgba(25,135,84,0.15);
+      outline: none; background: #fff;
+    }
+    .input-icon {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      color: #198754; font-size: 18px; pointer-events: none;
+    }
     .btn-login {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      background: linear-gradient(135deg, #198754, #20c997); /* Green Gradient */
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      font-size: 16px; font-weight: 600; color: #fff; cursor: pointer;
+      background: linear-gradient(135deg, #198754, #20c997);
       box-shadow: 0 4px 12px rgba(25,135,84,0.3);
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
       margin-top: 5px;
     }
-
     .btn-login:hover {
-      background: linear-gradient(135deg, #dc3545, #fd7e14); /* Red/Orange on hover */
+      background: linear-gradient(135deg, #dc3545, #fd7e14);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(220,53,69,0.45);
     }
+    .signup-text { margin-top: 18px; text-align: center; font-size: 14px; color: #555; }
+    .signup-text a { color: #198754; font-weight: 600; text-decoration: none; }
+    .signup-text a:hover { color: #dc3545; text-decoration: underline; }
 
-    .signup-text {
-      margin-top: 18px;
-      text-align: center;
+    /* Flash alerts */
+    .alert {
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
       font-size: 14px;
-      color: #555;
     }
-
-    .signup-text a {
-      color: #198754;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .signup-text a:hover {
-      color: #dc3545;
-      text-decoration: underline;
-    }
+    .alert-success { background-color: #d1e7dd; color: #0f5132; }
+    .alert-danger { background-color: #f8d7da; color: #842029; }
   </style>
 </head>
 <body>
 
   <div class="login-card">
+
     <h2 class="login-title">Login to Your Account</h2>
+
+    <!-- Flash Messages -->
+    <% if (success_msg && success_msg.length > 0) { %>
+      <% success_msg.forEach(msg => { %>
+        <div class="alert alert-success"><%= msg %></div>
+      <% }) %>
+    <% } %>
+
+    <% if (error_msg && error_msg.length > 0) { %>
+      <% error_msg.forEach(msg => { %>
+        <div class="alert alert-danger"><%= msg %></div>
+      <% }) %>
+    <% } %>
 
     <!-- Login Form -->
     <form action="/login" method="POST">
-      <!-- Email -->
       <div class="input-group">
         <input type="email" name="email" placeholder="Enter your email" required>
         <i class="bi bi-envelope input-icon"></i>
       </div>
 
-      <!-- Password -->
       <div class="input-group">
         <input type="password" name="password" placeholder="Enter your password" required>
         <i class="bi bi-lock input-icon"></i>
       </div>
 
-      <!-- Button -->
       <button type="submit" class="btn-login">Login</button>
     </form>
 
-    <!-- Signup Link -->
     <div class="signup-text">
       New here? <a href="/signup">Create an account</a>
     </div>
+
   </div>
 
 </body>

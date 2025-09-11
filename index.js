@@ -9,6 +9,8 @@ const path = require('path');
 const router = require('./routers');
 const MongoStore = require('connect-mongo');
 const passport = require('./middlewares/passport');
+const flash = require('connect-flash');
+const addFlash = require('./middlewares/flash');
 
 const port = process.env.port || 8081;
 
@@ -31,6 +33,9 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(flash());
+app.use(addFlash);
 
 app.use('/',router);
 

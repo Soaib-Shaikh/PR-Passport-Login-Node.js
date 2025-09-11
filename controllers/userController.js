@@ -18,34 +18,49 @@ const deleteLocalFile = (filename) => {
 // Profile page render
 exports.profilePage = async (req, res) => {
   try {
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) {
+      req.flash("error_msg", "Please login first");
+      return res.redirect('/login');
+    }
     const user = await User.findById(req.user._id).lean();
     return res.render('./pages/user/profile', { user });
   } catch (err) {
     console.error('Profile render error:', err);
-    return res.status(500).send('Server error');
+    req.flash("error_msg", "Failed to load profile");
+    return res.redirect('/');
   }
 };
 
 // Edit form render
 exports.editProfileForm = async (req, res) => {
   try {
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) {
+      req.flash("error_msg", "Please login first");
+      return res.redirect('/login');
+    }
     const user = await User.findById(req.user._id).lean();
     return res.render('./pages/user/editUser', { user });
   } catch (err) {
     console.error('Edit form error:', err);
-    return res.status(500).send('Server error');
+    req.flash("error_msg", "Failed to load edit form");
+    return res.redirect('/profile');
   }
 };
 
 // Update profile (name, mobile, address)
 exports.updateProfile = async (req, res) => {
   try {
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) {
+      req.flash("error_msg", "Please login first");
+      return res.redirect('/login');
+    }
+
     const { fullName, mobile, address, birthdate, gender } = req.body;
     const user = await User.findById(req.user._id);
-    if (!user) return res.redirect('/login');
+    if (!user) {
+      req.flash("error_msg", "User not found");
+      return res.redirect('/login');
+    }
 
     user.fullName = fullName || user.fullName;
     user.mobile = mobile || user.mobile;
@@ -54,11 +69,12 @@ exports.updateProfile = async (req, res) => {
     user.gender = gender || user.gender;
 
     await user.save();
-    console.log('Profile updated successfully.');
+    req.flash("success_msg", "Profile updated successfully");
     return res.redirect('/profile');
   } catch (err) {
     console.error('Update profile error:', err);
-    return res.status(500).send('Update failed');
+    req.flash("error_msg", "Profile update failed");
+    return res.redirect('/profile');
   }
 };
 
@@ -66,10 +82,15 @@ exports.updateProfile = async (req, res) => {
 exports.updateAvatar = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).send('No file uploaded!');
+      req.flash("error_msg", "No file uploaded!");
+      return res.redirect('/profile');
     }
 
     const user = await User.findById(req.user._id);
+    if (!user) {
+      req.flash("error_msg", "User not found");
+      return res.redirect('/login');
+    }
 
     // Delete old local avatar if exists
     if (user.avatarLocal) {
@@ -78,22 +99,30 @@ exports.updateAvatar = async (req, res) => {
 
     // Save new avatar filename in DB
     user.avatarLocal = req.file.filename;
-
     await user.save();
-    console.log('Profile Picture updated.');
-    
+
+    req.flash("success_msg", "Profile picture updated successfully");
     return res.redirect('/profile');
   } catch (err) {
     console.error('Avatar update error:', err);
-    return res.status(500).send('Error updating avatar');
+    req.flash("error_msg", "Error updating avatar");
+    return res.redirect('/profile');
   }
 };
 
 // Delete Profile
 exports.deleteProfile = async (req, res) => {
   try {
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) {
+      req.flash("error_msg", "Please login first");
+      return res.redirect('/login');
+    }
+
     const user = await User.findById(req.user._id);
+    if (!user) {
+      req.flash("error_msg", "User not found");
+      return res.redirect('/login');
+    }
 
     // Delete avatar if exists
     if (user.avatarLocal) deleteLocalFile(user.avatarLocal);
@@ -104,10 +133,11 @@ exports.deleteProfile = async (req, res) => {
     req.logout?.(() => {});
     req.session?.destroy(() => {});
 
-    console.log('User Deleted.');
+    req.flash("success_msg", "Account deleted successfully");
     return res.redirect('/login');
   } catch (err) {
     console.error('Delete profile error:', err);
-    return res.status(500).send('Delete failed');
+    req.flash("error_msg", "Error deleting account");
+    return res.redirect('/profile');
   }
 };
