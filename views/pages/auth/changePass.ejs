@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,6 +17,7 @@
       justify-content: center;
       padding: 20px;
     }
+
     .auth-box {
       background: #fff;
       border-radius: 18px;
@@ -25,6 +27,7 @@
       width: 100%;
       animation: fadeIn 0.8s ease-in-out;
     }
+
     .form-control {
       background: #f9f9f9;
       border: 1px solid #ddd;
@@ -33,16 +36,19 @@
       font-size: 15px;
       color: #333;
     }
+
     .form-control:focus {
       border-color: #0d6efd;
       box-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
       background: #fff;
       color: #000;
     }
+
     .input-wrapper {
       position: relative;
       margin-bottom: 18px;
     }
+
     .input-wrapper i {
       position: absolute;
       top: 50%;
@@ -51,6 +57,7 @@
       color: #0d6efd;
       font-size: 18px;
     }
+
     .btn-signup {
       width: 100%;
       padding: 14px;
@@ -61,6 +68,7 @@
       font-size: 16px;
       color: #fff;
     }
+
     #password-mismatch {
       font-style: italic;
       font-size: 0.9rem;
@@ -71,44 +79,50 @@
     }
   </style>
 </head>
+
 <body>
   <div class="auth-box">
-
     <h3 class="text-center mb-4">Change Password</h3>
 
     <!-- Flash Messages -->
-    <% if (success_msg && success_msg.length > 0) { %>
-      <% success_msg.forEach(msg => { %>
-        <div class="alert alert-success"><%= msg %></div>
-      <% }) %>
-    <% } %>
+    <% if (success_msg && success_msg.length> 0) { %>
+      <% success_msg.forEach(msg=> { %>
+        <div class="alert alert-success">
+          <%= msg %>
+        </div>
+        <% }) %>
+          <% } %>
+            <% if (error_msg && error_msg.length> 0) { %>
+              <% error_msg.forEach(msg=> { %>
+                <div class="alert alert-danger">
+                  <%= msg %>
+                </div>
+                <% }) %>
+                  <% } %>
 
-    <% if (error_msg && error_msg.length > 0) { %>
-      <% error_msg.forEach(msg => { %>
-        <div class="alert alert-danger"><%= msg %></div>
-      <% }) %>
-    <% } %>
+                    <form action="/changePass/<%= user ? user.id : '' %>" method="POST">
+                      <div class="input-wrapper">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" name="oldPassword" class="form-control" placeholder="Old Password"
+                          required>
+                      </div>
+                      <div class="input-wrapper">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" name="newPassword" class="form-control" placeholder="New Password"
+                          required>
+                      </div>
+                      <div class="input-wrapper">
+                        <i class="bi bi-lock-fill"></i>
+                        <input type="password" name="confirmPassword" class="form-control"
+                          placeholder="Confirm Password" required>
+                      </div>
 
-    <!-- Change Password Form -->
-    <form action="/changePass/<%= user ? user.id : '' %>" method="POST">
-      <div class="input-wrapper">
-        <i class="bi bi-lock"></i>
-        <input type="password" name="oldPassword" class="form-control" placeholder="Old Password" required>
-      </div>
-      <div class="input-wrapper">
-        <i class="bi bi-lock"></i>
-        <input type="password" name="newPassword" class="form-control" placeholder="New Password" required>
-      </div>
-      <div class="input-wrapper">
-        <i class="bi bi-lock-fill"></i>
-        <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
-      </div>
-
-      <button type="submit" class="btn-signup">Change Password</button>
-    </form>
+                      <button type="submit" class="btn-signup">Change Password</button>
+                    </form>
   </div>
 
   <script>
+    // Password match check
     document.addEventListener('DOMContentLoaded', () => {
       const newPassword = document.querySelector('input[name="newPassword"]');
       const confirmPassword = document.querySelector('input[name="confirmPassword"]');
@@ -133,5 +147,7 @@
       confirmPassword.addEventListener('input', checkMatch);
     });
   </script>
+
 </body>
+
 </html>
