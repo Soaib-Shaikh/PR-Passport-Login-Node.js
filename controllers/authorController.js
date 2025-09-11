@@ -10,7 +10,8 @@ exports.authorPosts = async (req, res) => {
 
     //  Fetch all posts by this author
     const posts = await Post.find({ author: author._id })
-      .populate('author', 'username avatarUrl bio')       // author info for display
+      .populate('author', 'username avatarUrl bio')
+      .populate('comments.author', 'username')    // author info for display
       .sort({ createdAt: -1 })
       .lean();
 

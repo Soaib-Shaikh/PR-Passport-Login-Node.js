@@ -24,8 +24,8 @@ module.exports.homePageReader = async (req, res) => {
         if (!req.isAuthenticated()) return res.redirect('/login');
 
         // All posts (latest first)
-        const posts = await Post.find()
-            .populate('author', 'username')
+        const posts = await Post.find() 
+            .populate('author', 'username avatarLocal bio')
             .populate('comments.author', 'username')
             .sort({ createdAt: -1 })
             .lean();

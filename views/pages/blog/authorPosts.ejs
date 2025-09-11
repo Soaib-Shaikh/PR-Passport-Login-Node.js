@@ -120,23 +120,29 @@
                 <!-- Main content: Author posts -->
                 <div class="col-md-8">
                     <!-- Author Header -->
+                    <!-- Author Header -->
                     <div class="author-header">
-                        <% if (user.avatarLocal) { %>
-                            <img src="/uploads/<%= user.avatarLocal %>" alt="avatar" class="avatar-img">
-                            <% } else { %>
-                                <div class="avatar-letter">
-                                    <%= (user.username && user.username[0]) ? user.username[0].toUpperCase() : 'U' %>
-                                </div>
-                                <% } %>
-                                    <div>
-                                        <h4>
-                                            <%= author.username %>
-                                        </h4>
-                                        <small class="text-muted">
-                                            <%= author.bio || 'Blogger' %>
-                                        </small>
+                        <% if (author) { %>
+                            <% if (author.avatarLocal) { %>
+                                <img src="/uploads/<%= author.avatarLocal %>" alt="avatar">
+                                <% } else { %>
+                                    <div class="avatar-letter"
+                                        style="width:80px;height:80px;font-size:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#ddd;">
+                                        <%= (author.username && author.username[0]) ? author.username[0].toUpperCase()
+                                            : 'U' %>
                                     </div>
+                                    <% } %>
+                                        <div>
+                                            <h4>
+                                                <%= author.username %>
+                                            </h4>
+                                            <small>
+                                                <%= author.bio || "Blogger" %>
+                                            </small>
+                                        </div>
+                                        <% } %>
                     </div>
+
 
                     <h5 class="mb-3">Posts by <%= author.username %>:</h5>
                     <div class="row g-3">
@@ -148,28 +154,20 @@
                                         <img src="<%= post.coverUrl || 'https://picsum.photos/400/300?blur=3' %>"
                                             class="card-img-top" alt="Post Cover">
 
-                                        <!-- Author + Title -->
+                                        <!-- Title + Author -->
                                         <div class="post-card-body">
-                                            <% if (user.avatarLocal) { %>
-                                                <img src="/uploads/<%= user.avatarLocal %>" alt="avatar"
-                                                    class="avatar-img">
-                                                <% } else { %>
-                                                    <div class="avatar-letter">
-                                                        <%= (user.username && user.username[0]) ?
-                                                            user.username[0].toUpperCase() : 'U' %>
-                                                    </div>
-                                                    <% } %>
-                                                        <div>
-                                                            <h6>
-                                                                <%= post.title %>
-                                                            </h6>
-                                                            <small>by <%= post.author.username %></small>
-                                                        </div>
+                                            <div>
+                                                <h6>
+                                                    <%= post.title %>
+                                                </h6>
+                                                <small>by <%= post.author.username %></small>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <% }) %>
+
                     </div>
                 </div>
 
