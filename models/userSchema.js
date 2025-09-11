@@ -29,6 +29,8 @@ const userSchema = new mongoose.Schema({
   avatarUrl:      { type: String }, // cloudinary secure url
   avatarPublicId: { type: String }, // cloudinary public id
 
+  // ✅ For Author Spotlight: bio/description
+  bio: { type: String, default: "Blogger" }  // short description for sidebar
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);

@@ -1,3 +1,4 @@
+// routers/index.js
 const express = require('express');
 const homeRouter = require('./home.routes');
 const postRouter = require('./post.routes');
@@ -6,11 +7,19 @@ const router = express.Router();
 const upload = require('../middlewares/upload');
 const { isAuth } = require('../middlewares/auth');
 const userController = require('../controllers/userController');
+const authorRouter = require('./author.routes');
 
-// Existing routes
+
+// Home routes (includes / and /blog)
 router.use('/', homeRouter);
+
+// Post routes
 router.use('/posts', postRouter);
+
+// User routes
 router.use('/user', userRouter);
+
+router.use('/author', authorRouter);
 
 // Profile routes
 router.get('/profile', isAuth, userController.profilePage);

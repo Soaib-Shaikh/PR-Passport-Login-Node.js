@@ -19,20 +19,80 @@ const uploadToCloudinary = async (filePath) => {
   return await cloudinary.uploader.upload(filePath, { folder: "blogs" });
 };
 
-// Feed
+// Homepage Feed
 exports.feed = async (req, res) => {
   try {
-    if (!req.user._id) return res.redirect('/login');
+    if (!req.isAuthenticated()) return res.redirect('/login'); // passport check
 
-    const user = await User.findById(req.session.userId);
+    // Current logged-in user
+    const user = req.user;
+
+    // All posts (latest first)
     const posts = await Post.find()
       .populate('author', 'username')
       .sort({ createdAt: -1 });
 
-    res.render('./pages/blog/blogHome', { posts, user });
+    // Featured posts (carousel) → latest 3
+    const featuredPosts = await Post.find()
+      .populate('author', 'username')
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    // Popular posts (sidebar) → most liked
+    const popularPosts = await Post.find()
+      .populate('author', 'username')
+      .sort({ likes: -1 })
+      .limit(5);
+
+    // Recent comments (sidebar)
+    const recentComments = [];
+    posts.forEach(p => {
+      p.comments.forEach(c => {
+        recentComments.push({
+          postId: p._id,
+          postTitle: p.title,
+          author: c.author,
+          body: c.body,
+          createdAt: c.createdAt
+        });
+      });
+    });
+    recentComments.sort((a, b) => b.createdAt - a.createdAt);
+    const latestComments = recentComments.slice(0, 5);
+
+    // Render blog homepage
+    res.render('./pages/blog/blogHome', {
+      user,
+      posts,
+      featuredPosts,
+      popularPosts,
+      recentComments: latestComments
+    });
+
   } catch (error) {
-    console.error("Error loading feed:", error);
-    return res.status(500).send('Server Error');
+    console.error("⚠️ Error loading feed:", error);
+    res.status(500).send('Server Error');
+  }
+};
+
+// Show single post
+exports.show = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate('author', 'username email')
+      .populate('comments.author', 'username');
+
+    if (!post) return res.status(404).send('Post not found');
+
+    res.render('./pages/blog/post', {
+      post,
+      user: req.user || null, // logged in user (passport)
+      me: req.user?._id
+    });
+
+  } catch (error) {
+    console.error('⚠️ Error fetching post:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
 
@@ -80,26 +140,26 @@ exports.create = async (req, res) => {
 };
 
 // Show single post
-exports.show = async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id)
-      .populate('author', 'username email')
-      .populate('comments.author', 'username'); // ✅ populate comment authors
+// exports.show = async (req, res) => {
+//   try {
+//     const post = await Post.findById(req.params.id)
+//       .populate('author', 'username email')
+//       .populate('comments.author', 'username'); // ✅ populate comment authors
 
-    if (!post) return res.status(404).send('Post not found');
+//     if (!post) return res.status(404).send('Post not found');
 
-    const user = req.user ? await User.findById(req.user._id).lean() : null;
+//     const user = req.user ? await User.findById(req.user._id).lean() : null;
 
-    return res.render('./pages/blog/post', {
-      post: post.toObject(), // convert mongoose doc to plain object
-      user,
-      me: req.user?._id
-    });
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    return res.status(500).send('Internal Server Error');
-  }
-};
+//     return res.render('./pages/blog/post', {
+//       post: post.toObject(), // convert mongoose doc to plain object
+//       user,
+//       me: req.user?._id
+//     });
+//   } catch (error) {
+//     console.error('Error fetching post:', error);
+//     return res.status(500).send('Internal Server Error');
+//   }
+// };
 
 
 // Toggle like

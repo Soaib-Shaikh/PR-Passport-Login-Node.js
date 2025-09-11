@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Posts by <%= author.username %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Author Header */
+        .author-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .author-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .author-header h4 {
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .author-header small {
+            color: #6c757d;
+        }
+
+        /* Post Card */
+        .post-card {
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            transition: transform .3s, box-shadow .3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .post-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .post-card img.card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .post-card-body {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+        }
+
+        .post-card-body img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .post-card-body h6 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .post-card-body small {
+            color: #6c757d;
+        }
+
+        /* Sidebar Cards */
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .sidebar-card h5 {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-card ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .sidebar-card ul li a:hover {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('../../partials/header') %>
+
+        <main class="container my-5">
+            <div class="row g-4">
+
+                <!-- Main content: Author posts -->
+                <div class="col-md-8">
+                    <!-- Author Header -->
+                    <div class="author-header">
+                        <% if (user.avatarLocal) { %>
+                            <img src="/uploads/<%= user.avatarLocal %>" alt="avatar" class="avatar-img">
+                            <% } else { %>
+                                <div class="avatar-letter">
+                                    <%= (user.username && user.username[0]) ? user.username[0].toUpperCase() : 'U' %>
+                                </div>
+                                <% } %>
+                                    <div>
+                                        <h4>
+                                            <%= author.username %>
+                                        </h4>
+                                        <small class="text-muted">
+                                            <%= author.bio || 'Blogger' %>
+                                        </small>
+                                    </div>
+                    </div>
+
+                    <h5 class="mb-3">Posts by <%= author.username %>:</h5>
+                    <div class="row g-3">
+                        <% posts.forEach(post=> { %>
+                            <div class="col-md-6">
+                                <a href="/posts/<%= post._id %>" class="text-decoration-none text-dark">
+                                    <div class="post-card">
+                                        <!-- Post Cover -->
+                                        <img src="<%= post.coverUrl || 'https://picsum.photos/400/300?blur=3' %>"
+                                            class="card-img-top" alt="Post Cover">
+
+                                        <!-- Author + Title -->
+                                        <div class="post-card-body">
+                                            <% if (user.avatarLocal) { %>
+                                                <img src="/uploads/<%= user.avatarLocal %>" alt="avatar"
+                                                    class="avatar-img">
+                                                <% } else { %>
+                                                    <div class="avatar-letter">
+                                                        <%= (user.username && user.username[0]) ?
+                                                            user.username[0].toUpperCase() : 'U' %>
+                                                    </div>
+                                                    <% } %>
+                                                        <div>
+                                                            <h6>
+                                                                <%= post.title %>
+                                                            </h6>
+                                                            <small>by <%= post.author.username %></small>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-md-4">
+                    <!-- Popular Posts -->
+                    <div class="sidebar-card">
+                        <h5>Popular Posts</h5>
+                        <ul class="list-unstyled mb-0">
+                            <% (popularPosts || []).forEach(p=> { %>
+                                <li class="mb-2"><a href="/posts/<%= p._id %>">
+                                        <%= p.title %>
+                                    </a></li>
+                                <% }) %>
+                        </ul>
+                    </div>
+
+                    <!-- Recent Comments -->
+                    <div class="sidebar-card">
+                        <h5>Recent Comments</h5>
+                        <ul class="list-unstyled mb-0">
+                            <% (recentComments || []).forEach(c=> { %>
+                                <li class="mb-2">
+                                    <small><strong>
+                                            <%= c.username %>:
+                                        </strong>
+                                        <%= c.body.substring(0, 40) %>...
+                                            <a href="/posts/<%= c.postId %>">View</a>
+                                    </small>
+                                </li>
+                                <% }) %>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <%- include('../../partials/footer') %>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
