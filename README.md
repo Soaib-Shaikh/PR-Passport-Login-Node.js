@@ -79,19 +79,30 @@ Deploy Link:-  https://pr-passport-login-node-js.onrender.com
 
 ## Folder Structure
 /project-root
+
 ├── /configs # Configuration files (Cloudinary, DB, etc.)
+
 ├── /controllers # Controller files for business logic (postController.js)
+
 ├── /middlewares # Middlewares like upload handlers (multer)
+
 ├── /models # Mongoose schemas: User, Post
+
 ├── /public # Static files + local uploads
+
 │ └── /uploads # Locally stored images
+
 ├── /routers # Route definitions
+
 ├── /views # EJS templates for rendering pages
 │ ├── /pages
 │ │ ├── /blog # Blog related views
 │ │ └── /writer # Writer views
+
 ├── index.js # Main Express app setup and entry point
+
 ├── package.json # Node dependencies and scripts
+
 └── README.md # This file
 
 
