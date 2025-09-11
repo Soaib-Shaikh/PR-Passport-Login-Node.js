@@ -5,6 +5,24 @@ A **full-featured blogging platform** built with **Node.js, Express, MongoDB, Pa
 It allows users to **sign up, log in, create, edit, delete, search, and view blog posts** with image upload support.  
 All uploaded images are stored both **locally** and on **Cloudinary**.  
 
+## Key Features
+
+- CRUD Blog Posts: Create, edit, delete, and view posts with rich content and images.
+
+- Image Management: Upload cover images stored both locally and on Cloudinary for optimized delivery.
+
+- Categorized Posts: Organize posts into categories like Technology, Lifestyle, or Travel, and filter by       category.
+
+- Search: Quickly search posts by title or content.
+ 
+- User Engagement: Like posts and add comments for interactive discussions.
+ 
+- User Profiles: Update profile details, upload avatars, and manage account settings.
+ 
+- Responsive & SEO-Friendly: Fully responsive design using Bootstrap and dynamic URLs for better SEO.
+ 
+- Secure Authorization: Only post owners can edit or delete their content.
+ 
 **Live Demo:** 
 
 Deploy Link:-  https://pr-passport-login-node-js.onrender.com
@@ -119,7 +137,8 @@ bash npm start
 ## 👨‍💻 Usage
 
 - Register and log in using your credentials.
-- Create, edit, and delete blog posts with images. 
+- Create, edit, and delete blog posts with images.
+- Filter posts by category (Technology, Lifestyle, Travel). 
 - Search blogs by keywords or titles.
 - Like and comment on posts.
 - Manage your profile, update details, and change password securely.

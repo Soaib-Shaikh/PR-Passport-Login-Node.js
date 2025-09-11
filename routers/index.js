@@ -8,7 +8,7 @@ const upload = require('../middlewares/upload');
 const { isAuth } = require('../middlewares/auth');
 const userController = require('../controllers/userController');
 const authorRouter = require('./author.routes');
-
+const categoryRouter = require('./category.routes');
 
 // Home routes (includes / and /blog)
 router.use('/', homeRouter);
@@ -19,7 +19,11 @@ router.use('/posts', postRouter);
 // User routes
 router.use('/user', userRouter);
 
+// Author routes
 router.use('/author', authorRouter);
+
+// Category routes
+router.use('/category', categoryRouter);
 
 // Profile routes
 router.get('/profile', isAuth, userController.profilePage);

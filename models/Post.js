@@ -10,6 +10,7 @@ const commentSchema = new mongoose.Schema({
 const postSchema = new mongoose.Schema({
   title:   { type: String, required: true, trim: true },
   body:    { type: String, required: true },
+  category: { type: String, enum: ['tech','lifestyle','travel'], default: 'tech' },
   coverUrl: String,        // Cloudinary URL
   coverPublicId: String,   // Cloudinary public id (for deletion)
   localPath: String,       // Local filename (in public/uploads)

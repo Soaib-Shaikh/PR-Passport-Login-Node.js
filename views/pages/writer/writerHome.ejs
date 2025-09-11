@@ -133,6 +133,14 @@
         <div class="form-text">Upload JPG/PNG/WebP. Large images will be resized automatically.</div>
       </div>
       <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-control" required>
+          <option value="tech">Technology</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="travel">Travel</option>
+        </select>
+      </div>
+      <div class="mb-3">
         <label class="form-label">Content</label>
         <textarea name="body" class="form-control" placeholder="Write your blog content here..." required></textarea>
       </div>
@@ -146,7 +154,7 @@
     <div class="blog-list">
       <h4 class="fw-bold mb-3">📚 My Blogs</h4>
 
-      <% if (posts.length > 0) { %>
+      <% if (posts && posts.length > 0) { %>
         <% posts.forEach(post => { %>
           <div class="blog-card">
             <div class="blog-title"><%= post.title %></div>
