@@ -1,6 +1,7 @@
 const User = require('../models/userSchema');
 const path = require('path');
 const fs = require('fs');
+const Post = require('../models/post');
 
 // Helper → Delete old local file
 const deleteLocalFile = (filename) => {
@@ -141,3 +142,15 @@ exports.deleteProfile = async (req, res) => {
     return res.redirect('/profile');
   }
 };
+
+
+exports.userBlogsPage = async (req, res) => {
+  try {
+      const posts = await Post.find({ author: req.user._id }).sort({ createdAt: -1 }).lean();
+      res.render('pages/user/myblogs', { posts, user: req.user });
+
+  } catch (error) {
+      req.flash('error_msg', 'Error fetching your blogs');
+      return res.redirect('/profile');
+  }
+}

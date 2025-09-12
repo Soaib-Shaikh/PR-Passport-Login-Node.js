@@ -4,6 +4,7 @@ const userController = require("../controllers/userController");
 const { isAuth } = require("../middlewares/auth");
 const upload = require("../middlewares/upload");
 
+
 // Profile Routes
 router.get("/profile", isAuth, userController.profilePage);
 router.get("/profile/edit", isAuth, userController.editProfileForm);
@@ -14,4 +15,5 @@ router.post("/profile/avatar", isAuth, upload.single("avatar"), userController.u
 
 router.post("/profile/delete", isAuth, userController.deleteProfile);
 
+router.get('/myblogs', isAuth, userController.userBlogsPage);
 module.exports = router;
